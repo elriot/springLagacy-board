@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBodyReturnValueHandler;
 
 import com.movie.domain.BookVO;
+import com.movie.domain.TheatherVO;
 
 
 @Repository
@@ -33,23 +34,34 @@ public class BookDao {
 
 	}
 	
+	
+	// 좌석 예약 여부 가져오기
+	public List<TheatherVO> getTheatherSeatList(String tt_num, String bk_wDate, String mv_time, int mv_num) {
 
-	public List<BookVO> getSeatList(int tt_num) {
-		/*String sql = "select *" + 
-				"from theather t left outer join book b " + 
-				"on t.tt_num = b.tt_num " + 
-				"and t.tt_seatNum = b.tt_seatNum " + 
-				"and t.tt_num=? " +
-				"and bk_wDate=? " + 
-				"and rg_time=? " +
-				"order by t.tt_seatNum asc ";*/
-		String sql = "select * from theather t left outer join book b on t.tt_num = b.tt_num and t.tt_seatNum = b.tt_seatNum where t.tt_num=?";
-		//String sql="select * from book where tt_num=? and bk_wDate=? and rg_time=? order by tt_seatNum asc";
-		//select * from book where tt_num="1" and bk_wDate="2018-11-30" and rg_time="11:30" order by tt_seatNum asc;
+		String sql = "select * from theather where tt_num=?" ;
+		String bookSql = "select * from book where mv_num=? and bk_wDate=? and mv_time=? and tt_num=?";
+		List<TheatherVO> seatList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<TheatherVO>(TheatherVO.class), tt_num);
+		List<BookVO>bookList = jdbcTemplate.query(bookSql, new BeanPropertyRowMapper<BookVO>(BookVO.class), mv_num, bk_wDate, mv_time, tt_num);
 
-		//String[] seatArr = jdbcTemplate.query(sql, new Object[], String.class, book.getTt_num(),book.getBk_wDate(), book.getRg_time());
-		List<BookVO> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<BookVO>(BookVO.class));
-		return list;
+		for(int i=0;i<seatList.size();i++) {
+			for(int j=0;j<bookList.size();j++) {
+				if(seatList.get(i).getTt_seatNum().equals(bookList.get(j).getTt_seatNum())) {
+					System.out.println("seatList"+seatList.get(i).getIsBooked());
+					seatList.get(i).setIsBooked("T");
+				} else {
+					seatList.get(i).setIsBooked("F");
+				}
+				
+				if(seatList.get(i).getIsBooked()==null) {
+					seatList.get(i).setIsBooked("F");
+				}
+				System.out.println(i+1+"번째"+seatList.get(i).getIsBooked());
+			}
+/*			System.out.println("----------"+i+"번째--------");
+			System.out.println(seatList.get(i));*/
+		}
+		
+		return seatList;
 	}
 	
 //	public void insert(Book book) {

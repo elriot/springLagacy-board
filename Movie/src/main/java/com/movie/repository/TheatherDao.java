@@ -8,14 +8,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class TheatherDao {
-		@Autowired
-		static JdbcTemplate jdbcTemplate;
-		@Autowired
-		static NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
-		static SimpleJdbcInsert simpleJdbcInsert;
-		
-		
-	
-	
+	@Autowired
+	static JdbcTemplate jdbcTemplate;
+	@Autowired
+	static NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+	static SimpleJdbcInsert simpleJdbcInsert;
+
+
+
 }

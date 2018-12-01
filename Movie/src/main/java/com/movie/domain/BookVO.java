@@ -22,7 +22,7 @@ public class BookVO {
 	private String tt_seatNum;
 	private String bk_date;
 	private String bk_wDate;
-	private String rg_time;
+	private String mv_time;
 	private String bk_price;
 	private String bk_paid;
 	
@@ -69,11 +69,12 @@ public class BookVO {
 	public void setBk_wDate(String bk_wDate) {
 		this.bk_wDate = bk_wDate;
 	}
-	public String getRg_time() {
-		return rg_time;
+
+	public String getMv_time() {
+		return mv_time;
 	}
-	public void setRg_time(String rg_time) {
-		this.rg_time = rg_time;
+	public void setMv_time(String mv_time) {
+		this.mv_time = mv_time;
 	}
 	public String getBk_price() {
 		return bk_price;
@@ -87,6 +88,34 @@ public class BookVO {
 	public void setBk_paid(String bk_paid) {
 		this.bk_paid = bk_paid;
 	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("BookVO [bk_num=");
+		builder.append(bk_num);
+		builder.append(", mb_ID=");
+		builder.append(mb_ID);
+		builder.append(", mv_num=");
+		builder.append(mv_num);
+		builder.append(", tt_num=");
+		builder.append(tt_num);
+		builder.append(", tt_seatNum=");
+		builder.append(tt_seatNum);
+		builder.append(", bk_date=");
+		builder.append(bk_date);
+		builder.append(", bk_wDate=");
+		builder.append(bk_wDate);
+		builder.append(", mv_time=");
+		builder.append(mv_time);
+		builder.append(", bk_price=");
+		builder.append(bk_price);
+		builder.append(", bk_paid=");
+		builder.append(bk_paid);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	
 
 
 	

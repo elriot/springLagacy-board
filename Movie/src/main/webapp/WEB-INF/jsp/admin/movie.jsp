@@ -59,7 +59,7 @@
                 <div class="row">
                     <div class="col-lg-6">
 
-                        <form action="movie" method="post" role="form" enctype="multipart/form-data">
+                        <form action="mrg" method="post" role="form" enctype="multipart/form-data">
 
                 			<div class="form-group">
                                 <label>영화 제목</label>
@@ -85,6 +85,30 @@
                             <div class="form-group" >
                                 <label>개봉일</label>
                                 <input type="date" id="mv_releaseDate" name="mv_releaseDate">
+                            </div>
+                            
+							<div class="form-group" >
+                                <label>상영관번호</label>
+                                <c:forEach var="i" begin="1" end="5">
+                                	<input type="checkbox" name="mv_time">${i}관
+                                </c:forEach>
+                            </div>
+                            
+                            <div class="form-group" >
+                                <label>상영시작일</label>
+                                <input type="date" name="mv_startDate">
+                            </div>
+                            
+                            <div class="form-group" >
+                                <label>상영종료일</label>
+                                <input type="date" name="mv_endDate">
+                            </div>
+                            
+                            <div class="form-group" >
+                                <label>상영시간대</label>
+                                <c:forEach var="i" begin="9" end="24">
+                                	<input type="checkbox" name="mv_time">${i}시 
+                                </c:forEach>
                             </div>
                             
                             <div class="form-group">

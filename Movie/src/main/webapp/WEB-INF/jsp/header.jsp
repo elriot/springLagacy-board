@@ -53,7 +53,7 @@ function popUp(w, h){
               <a class="nav-link" href="/movie/" onclick="popUp(320, 370)">로그인</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/movie/book/select">영화 예매</a>
+              <a class="nav-link" href="/movie/book/selectMovie">영화 예매</a>
             </li>            
             <li class="nav-item"><!-- //하이퍼링크엥 슬래쉬없음 -->
               <a class="nav-link" href="/movie/member/add">회원가입</a>

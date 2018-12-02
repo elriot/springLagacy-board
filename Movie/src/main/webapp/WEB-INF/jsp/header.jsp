@@ -12,6 +12,52 @@ function popUp(w, h){
 	}   
 </script>
 
+	<meta charset="UTF-8"/>
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+ 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+ 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+ 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<title>Movie</title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+		<a class="navbar-brand" href="/movie">Movie</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#collapsibleNavbar">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="collapsibleNavbar">
+			<ul class="navbar-nav">
+				<li class="nav-item"><a class="nav-link" href="/movie">메인</a>
+				</li>
+				<li class="nav-item"><a class="nav-link"
+					href="/movie/book/selectMovie">영화 예매</a></li>
+				<li class="nav-item">
+					<!-- //하이퍼링크엥 슬래쉬없음 --> <a class="nav-link"
+					href="/movie/member/add">회원가입</a>
+				</li>
+				<li class="nav-item"><a class="nav-link"
+					href="/movie/admin/main">관리자메뉴</a></li>
+			</ul>
+		</div>
+	</nav>
+	<br>
+	<%-- <%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+function popUp(w, h){
+	 x = (screen.availWidth - w) / 2;
+	 y = (screen.availHeight - h) / 2;
+	 window.open('/movie/member/login', 'login','width='+w+', height='+h+', left='+x+', top='+y+',toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,copyhistory=no,resizable=no');
+	}   
+</script>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -64,4 +110,4 @@ function popUp(w, h){
           </ul>
         </div>
       </div>
-    </nav>
+    </nav> --%>

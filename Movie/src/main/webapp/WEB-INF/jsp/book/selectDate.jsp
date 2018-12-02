@@ -19,9 +19,9 @@
 
 
 <form action="selectTime" method="post">
+<input type="hidden" name="mv_title" value="${mv_title}">
 	<div class="form-group">
-		<label>	선택 영화 :</label> 
-			<input type="text" name="mv_title" value="${mv_title}"readonly>
+		선택 영화 : ${mv_title} <br>
 	</div>
 <!-- 상영관 입력 : <input type="text" name="tt_num"><br> -->
 관람일 입력 : <input type="date" name="bk_wDate" min="${min}" max="${max}"><br>

@@ -17,34 +17,82 @@
 
 <script>
 $(document).ready(function(){
-    $("#checkBoxId").change(function(){
-        if($(this).is(":checked")){
-            alert("체크박스 체크했음!");
-        }else{
-            alert("체크박스 체크 해제!");
-        }
-    });
-});
+	var seat = $("#selectedSeat");
+	var seatPrice = $("#seatPrice"); 
+
+	$(".seatNumber").click(function () {
+	    var seatValue = $(this).attr("value");
+	    var selectedSeat = $(seat).find(".selectedSeatNumber[value='" + seatValue + "']");
+	    var seatLength = selectedSeat.length;
+
+	    if(seatLength) {
+	         selectedSeat.remove();
+	    } else {
+	        $(seat).append("<span class='selectedSeatNumber' value='" + seatValue + "'>" + seatValue + ' ' + "</span>");
+	    }	
+
+	    var totalSelectedSeat = $(".selectedSeatNumber").length;
+
+        $(".totalPrice").remove();
+	    if(totalSelectedSeat > 0) {
+	        $(seatPrice).append("<span class='totalPrice'>" + (totalSelectedSeat * 10000) + "</span>");
+	    }
+	    
+	    $("#hiddenPrice").attr("value", (totalSelectedSeat * 10000));
+	    
+	    
+	});
+	
+	$('#resetSeatNum').click(function(){
+	    $(".selectedSeatNumber").remove();	    
+        $(".totalPrice").remove();
+		
+	});
+	
+	// div영역(#selectedSeat)에 세로로 추가하기
+	/*var seat = $("#selectedSeat");
+
+	$(".seatNumber").on("click", function () {
+	    var seatValue = $(this).attr("value");
+
+	    if($(seat).find(".seatNumber[value='" + seatValue + "']").length) {
+	        $(seat).find(".seatNumber[value='" + seatValue + "']").remove();
+	    } else {
+	        $(seat).append("<div class='seatNumber' value='" + seatValue + "'>" + seatValue + "</div>");
+	    }
+	}); */
+})
+
 </script>
 </head>
 <body>
-<h1>1번 상영관</h1>
+<h1>${bookVO.tt_num}번 상영관</h1>
 <hr>
 <div id="page-wrapper">
-
-    <div class="container-fluid">
-<form action="seatSelected?tt_num=${bookVO.tt_num}&bk_wDate=${bookVO.bk_wDate}&mv_time=${bookVO.mv_time}" method="post">
+<div class="container-fluid">
+<form action="payment" method="post">
+<input type="hidden" name="mv_title" value="${mv_title}">
+<input type="hidden" name="tt_num" value="${bookVO.tt_num}">
+<input type="hidden" name="bk_wDate" value="${bookVO.bk_wDate}">
+<input type="hidden" name="mv_time" value="${bookVO.mv_time}">
+<input type="hidden" name="mv_num" value="${mv_num}">
+<input type="hidden" name="bk_price" id="hiddenPrice" value="">
 <table>
 <tr><th> </th><th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th></tr>
 <tr><th>A</th>	
 	<c:set var="i" value="1"/>
 		<c:forEach var="s" items="${list}">
-			<c:if test="${i==11}"></tr><tr><th>B</th></c:if>
-			<c:if test="${i==21}"></tr><tr><th>C</th></c:if>
-			<c:if test="${i==31}"></tr><tr><th>D</th></c:if>
+				<c:if test="${i==11}"></tr><tr><th>B</th></c:if>
+				<c:if test="${i==21}"></tr><tr><th>C</th></c:if>
+				<c:if test="${i==31}"></tr><tr><th>D</th></c:if>
+				<c:if test="${i==41}"></tr><tr><th>E</th></c:if>
+				<c:if test="${i==51}"></tr><tr><th>F</th></c:if>
+				<c:if test="${i==61}"></tr><tr><th>G</th></c:if>
+
+				
 			<c:choose>				
 				<c:when test="${s.isBooked eq 'F' or booked eq 'F'}"><td>
-				 <p><label><input type="checkbox" class="filled-in" id="checkBoxId" name="seatNum" value="${s.tt_seatNum}"/><span></span></label></p></td></c:when>
+				 <p><label><input type="checkbox" class="filled-in seatNumber" name="tt_seatNum" value="${s.tt_seatNum}"/><span></span></label></p></td></c:when>
 				<c:otherwise><td><p><label><input type="checkbox" disabled="disabled" /><span></span></label></p></c:otherwise>
 			</c:choose>			
 			<c:set var="i" value="${i+1}"/>
@@ -52,12 +100,19 @@ $(document).ready(function(){
 		</c:forEach>
 </tr>
 </table> 	
+<input type="reset" class="waves-effect waves-light btn-large" id="resetSeatNum" value="Reset">
 <input type="submit" class="waves-effect waves-light btn-large" value="Select">
+
 </form>
 </div>
 </div>
 <hr>
-<div id="selected"></div>
+<div id="selectedSeat">
+    <span>선택한 좌석 : </span>
+</div>
+<div id="seatPrice">
+    <span>가격 : </span>
+</div>
 </body>
 </html>
 		
@@ -283,22 +338,23 @@ $(document).ready(function(){
 </c:choose>  --%>
 
 
-<%-- 	<c:when test="${list.size() > 0}">	 --%>
-<%-- 		<c:forEach var="list" items="${list}"> --%>
+<%-- 	<c:when test="${list.size() > 0}">	
+		<c:forEach var="list" items="${list}">
 <!-- 			<tr> -->
-<%-- 				<th><c:if test="${list.tt_seatNum ne 'A01'}"><input type="checkbox" value="A01"></c:if></th> --%>
-<%-- 				<th><c:if test="${list.tt_seatNum ne 'A02'}"><input type="checkbox" value="A02"></c:if></th> --%>
-<%-- 				<th><c:if test="${list.tt_seatNum ne 'A03'}"><input type="checkbox" value="A03"></c:if></th> --%>
-<%-- 				<th><c:if test="${list.tt_seatNum ne 'A04'}"><input type="checkbox" value="A04"></c:if></th> --%>
-<%-- 				<th><c:if test="${list.tt_seatNum ne 'A05'}"><input type="checkbox" value="A05"></c:if></th> --%>
+				<th><c:if test="${list.tt_seatNum ne 'A01'}"><input type="checkbox" value="A01"></c:if></th>
+				<th><c:if test="${list.tt_seatNum ne 'A02'}"><input type="checkbox" value="A02"></c:if></th>
+				<th><c:if test="${list.tt_seatNum ne 'A03'}"><input type="checkbox" value="A03"></c:if></th>
+				<th><c:if test="${list.tt_seatNum ne 'A04'}"><input type="checkbox" value="A04"></c:if></th>
+				<th><c:if test="${list.tt_seatNum ne 'A05'}"><input type="checkbox" value="A05"></c:if></th>
 <!-- 			</tr> -->
 				
 <!-- 			<tr> -->
-<%-- 				<th><c:if test="${list.tt_seatNum ne 'A06'}"><input type="checkbox" value="A06"></c:if></th> --%>
-<%-- 				<th><c:if test="${list.tt_seatNum ne 'A07'}"><input type="checkbox" value="A07"></c:if></th> --%>
-<%-- 				<th><c:if test="${list.tt_seatNum ne 'A08'}"><input type="checkbox" value="A08"></c:if></th> --%>
-<%-- 				<th><c:if test="${list.tt_seatNum ne 'A09'}"><input type="checkbox" value="A09"></c:if></th> --%>
-<%-- 				<th><c:if test="${list.tt_seatNum ne 'A10'}"><input type="checkbox" value="A10"></c:if></th> --%>
+				<th><c:if test="${list.tt_seatNum ne 'A06'}"><input type="checkbox" value="A06"></c:if></th>
+				<th><c:if test="${list.tt_seatNum ne 'A07'}"><input type="checkbox" value="A07"></c:if></th>
+				<th><c:if test="${list.tt_seatNum ne 'A08'}"><input type="checkbox" value="A08"></c:if></th>
+				<th><c:if test="${list.tt_seatNum ne 'A09'}"><input type="checkbox" value="A09"></c:if></th>
+				<th><c:if test="${list.tt_seatNum ne 'A10'}"><input type="checkbox" value="A10"></c:if></th>
 <!-- 			</tr> -->
-<%-- 		</c:forEach> --%>
-<%-- 	</c:when>		 --%>
+		</c:forEach>
+	</c:when>		
+ --%>

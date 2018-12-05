@@ -10,7 +10,6 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-
 <title>SB Admin - Bootstrap Admin Template</title>
 <%@include file="nav.jsp"%>
 
@@ -30,12 +29,9 @@
 			</div>
 		</div>
 		<!-- /.row -->
-		<br>
-	  <h4>Filter Table</h4>
-	  <input class="form-control" id="myInput" type="text" placeholder="Search.."><br>
 
 		<div class="row">
-			<div class="col-lg-12">
+			<div class="col-lg-6">
 				<h2>Member List</h2>
 				<div class="table-responsive">
 					<table class="table table-bordered table-hover">
@@ -51,7 +47,7 @@
 								<th>가입일</th>
 							</tr>
 						</thead>
-					    <tbody id="myTable">
+						<tbody>
 						<c:set var="i" value="1"/>
 							<c:choose>
 								<c:when test="${not empty list}">
@@ -97,16 +93,6 @@
 
 <!-- Bootstrap Core JavaScript -->
 <script src="../startbootstrap-sb-admin-3.3.7/js/bootstrap.min.js"></script>
-<script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-</script>
 </body>
 
 </html>

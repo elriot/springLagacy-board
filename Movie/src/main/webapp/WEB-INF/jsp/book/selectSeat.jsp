@@ -2,13 +2,18 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<%@include file="../header.jsp"%>
->
-<!-- 아래 두개는 좌석 선택 css -->
- <!-- Compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">	
-<!-- Compiled and minified JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <script>
 $(document).ready(function(){
@@ -59,21 +64,19 @@ $(document).ready(function(){
 })
 
 </script>
-
+</head>
+<body>
 <h1>${bookVO.tt_num}번 상영관</h1>
 <hr>
-<div class="container">
-	<div class="row">
-		<div class="col-lg-8 col-md-10 mx-auto">
-		<div id="page-wrapper">
-		<div class="container-fluid">
-		<form action="payment" method="post">
-		<input type="hidden" name="mv_title" value="${mv_title}">
-		<input type="hidden" name="tt_num" value="${bookVO.tt_num}">
-		<input type="hidden" name="bk_wDate" value="${bookVO.bk_wDate}">
-		<input type="hidden" name="mv_time" value="${bookVO.mv_time}">
-		<input type="hidden" name="mv_num" value="${mv_num}">
-		<input type="hidden" name="bk_price" id="hiddenPrice" value="">
+<div id="page-wrapper">
+<div class="container-fluid">
+<form action="payment" method="post">
+<input type="hidden" name="mv_title" value="${mv_title}">
+<input type="hidden" name="tt_num" value="${bookVO.tt_num}">
+<input type="hidden" name="bk_wDate" value="${bookVO.bk_wDate}">
+<input type="hidden" name="mv_time" value="${bookVO.mv_time}">
+<input type="hidden" name="mv_num" value="${mv_num}">
+<input type="hidden" name="bk_price" id="hiddenPrice" value="">
 <table>
 <tr><th> </th><th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th></tr>
 <tr><th>A</th>	
@@ -101,9 +104,6 @@ $(document).ready(function(){
 <input type="submit" class="waves-effect waves-light btn-large" value="Select">
 
 </form>
-</div>
-</div>
-</div>
 </div>
 </div>
 <hr>

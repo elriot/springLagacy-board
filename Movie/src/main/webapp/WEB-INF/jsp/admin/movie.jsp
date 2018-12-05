@@ -57,9 +57,9 @@
                 <!-- /.row -->
 
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
 
-                        <form action="movie" method="post" role="form" enctype="multipart/form-data">
+                        <form action="mrg" method="post" role="form" enctype="multipart/form-data">
 
                 			<div class="form-group">
                                 <label>영화 제목</label>
@@ -70,7 +70,7 @@
                             <div class="form-group">
                                 <label>영화등급</label>
                                 <select class="form-control" name="mv_rating">
-                                    <option>전체</option>
+                                    <option>전체이용가</option>
                                     <option>12세</option>
                                     <option>15세</option>
                                     <option>18세</option>
@@ -89,8 +89,8 @@
                             
 							<div class="form-group" >
                                 <label>상영관번호</label>
-                                <c:forEach var="t" items="${list }">
-                                	<input type="checkbox" name="tt_num" value="${t.tt_num }">${t.tt_num}관
+                                <c:forEach var="i" begin="1" end="5">
+                                	<input type="checkbox" name="mv_time">${i}관
                                 </c:forEach>
                             </div>
                             
@@ -107,15 +107,7 @@
                             <div class="form-group" >
                                 <label>상영시간대</label>
                                 <c:forEach var="i" begin="9" end="24">
-                                	<c:choose>                                 		                               
-                                	<c:when test="${i < 10 }">
-                                	 	<input type="checkbox" name="mv_time" value="0${i}:00">0${i}시
-                                		
-                                	</c:when>
-                                	<c:otherwise>
-                                		<input type="checkbox" name="mv_time" value="${i }:00">${i}시
-                                	</c:otherwise>                                	
-                                	</c:choose> 
+                                	<input type="checkbox" name="mv_time">${i}시 
                                 </c:forEach>
                             </div>
                             

@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.movie.domain.MemberVO;
 import com.movie.service.MemberService;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+
 @RestController
-@RequestMapping("member")
+@RequestMapping("api/member")
 public class MemberRestController {
 	
 	@Autowired
@@ -30,8 +32,17 @@ public class MemberRestController {
 	
 	@RequestMapping("chkDupId")
 	public Map<String, Integer> checkDuplicatId(@RequestParam String id){
-		
 		int count = memberService.countById(id);
+		Map<String, Integer> map = new HashMap<>();
+		map.put("count", count);
+		
+		return map;
+	}
+	
+	@RequestMapping("chkDupEmail")
+	public Map<String, Integer> checkDuplicatEmail(@RequestParam String email){
+		System.out.println("=========email 체크=========");
+		int count = memberService.countByEmail(email);
 		Map<String, Integer> map = new HashMap<>();
 		map.put("count", count);
 		

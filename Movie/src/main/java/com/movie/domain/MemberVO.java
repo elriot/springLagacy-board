@@ -4,7 +4,6 @@ package com.movie.domain;
 public class MemberVO {
 	
 	private Integer mb_num;
-	
 	private String mb_ID;
 	private String mb_passwd;
 	private String mb_name;
@@ -13,9 +12,6 @@ public class MemberVO {
 	private String mb_grade;
 	private Integer mb_point;
 	private String mb_joinDate;
-	
-	
-
 	public Integer getMb_num() {
 		return mb_num;
 	}
@@ -70,6 +66,15 @@ public class MemberVO {
 	public void setMb_joinDate(String mb_joinDate) {
 		this.mb_joinDate = mb_joinDate;
 	}
+	@Override
+	public String toString() {
+		return "MemberVO [mb_num=" + mb_num + ", mb_ID=" + mb_ID + ", mb_passwd=" + mb_passwd + ", mb_name=" + mb_name
+				+ ", mb_email=" + mb_email + ", mb_phone=" + mb_phone + ", mb_grade=" + mb_grade + ", mb_point="
+				+ mb_point + ", mb_joinDate=" + mb_joinDate + "]";
+	}
+	
+	
+	
 	
 	
 	

@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,14 +22,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.movie.domain.BookVO;
 import com.movie.domain.MovieVO;
 import com.movie.domain.TheatherVO;
 import com.movie.repository.BookDao;
 import com.movie.repository.MovieDao;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
 
 @Controller
 @RequestMapping("book")
@@ -38,6 +39,12 @@ public class BookController {
 	private BookDao bookDao;
 	@Autowired
 	private MovieDao movieDao;
+	
+	// 좌석 정보 뷰 테스트용 http://localhost:9000/movie/book/selectSeatTest
+	@RequestMapping("selectSeatTest")
+	public String selectSeatTest() {
+		return "book/selectSeatTest";
+	}
 
 	// 예약 1) 영화 제목 선택하기
 	@RequestMapping("selectMovie")
@@ -75,28 +82,38 @@ public class BookController {
 		
 		// 오늘날짜
 		Date date = cal.getTime();
-		String today = sdf.format(date).toString();
+		String min = sdf.format(date).toString();
 		
 		// 7일 후 날짜
 		cal.add(Calendar.DATE, 7);
 		Date dateAfterAWeek = cal.getTime();
-		String afterAWeek = sdf.format(dateAfterAWeek).toString();
+		String max = sdf.format(dateAfterAWeek).toString();
 		
 		//System.out.println("오늘 날짜는: "+ today +", 일주일 뒤에는 : "+ afterAWeek);
+		
+		
 		
 		// 영화이름으로 상영종료일 가져오기
 		MovieVO movieVO = movieDao.getMovieByTitle(mv_title);
 				
 		// 영화 상영종료 날짜가 현재일+7 보다 빠르면 max값을 영화 상영 종료 날짜로 변경하기
 		try {
+			String strMovieStartDate = movieVO.getMv_startDate();
 			String strMovieEndDate = movieVO.getMv_endDate();
 			//System.out.println("영화 상영 종료일 : " + strMovieEndDate);
 			Date movieEndDate = sdf.parse(strMovieEndDate);
 			int compare = dateAfterAWeek.compareTo(movieEndDate);
 			// 영화 상영종료 날짜가  일주일 뒤의 날짜보다 빠르면
 			if (compare > 0) {
-				afterAWeek = strMovieEndDate;
+				// max값을 상영종료일로 변경함
+				max = strMovieEndDate;
 				//System.out.println("일주일 뒤의 날짜보다 상영 종료일이 더 빠릅니다.");
+			}
+			
+			// 영화 상영시작일이 오늘보다 늦으면 캘린더 min 값을 상영 시작일로 변경함
+			int compareStartDate = min.compareTo(strMovieStartDate);
+			if(compareStartDate < 0) {
+				min = strMovieStartDate;
 			}
 
 		} catch (ParseException e) {
@@ -104,8 +121,8 @@ public class BookController {
 
 		}
 
-		model.addAttribute("min", today);
-		model.addAttribute("max", afterAWeek);		
+		model.addAttribute("min", min);
+		model.addAttribute("max", max);		
 		model.addAttribute("mv_title", mv_title);
 						
 		return "book/selectDate";
@@ -127,31 +144,41 @@ public class BookController {
 		String wDate = bk_wDate;
 		System.out.println(systemTime+"," +wDate);
 		int compare = systemTime.compareTo(wDate);
+		int check=0;
 		if(compare==0) {
 			//System.out.println("상영일과 오늘이 같음");
 			String now = sdf2.format(System.currentTimeMillis());
-			for(MovieVO vo : list) {
+			for(int i =0; i <list.size(); i++) {
+				MovieVO vo = list.get(i);
 				String mvTime = vo.getMv_time();
 				int compareTime = now.compareTo(mvTime);
-
-				if(compareTime<0) {
-					response.setContentType("text/html; charset=UTF-8");
-		            PrintWriter out;
-		            
-					try {
-						out = response.getWriter();
-			            out.println("<script>");
-			            out.println("alert('금일 해당 영화의 상영이 종료되었습니다.날짜를 다시 선택해 주세요');");
-			            out.println("history.back();");
-			            out.println("</script>");
-			            out.close();
-			            return null;
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+				
+				// 현재 시간과 영화 상영시간을 비교.
+				// 1: 리턴. 상영이 이미 시작됨 -> 리스트에서 삭제
+				if(compareTime>0) {
+					list.remove(i);
 				}
-			}
-		}		
+			}			
+		}	
+		
+		// 만약 리스트 사이즈가 0이면 (현재 시간을 기준으로 오늘 해당영화의 상영이 종료되었으면)
+		response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out;
+        if (list.size()==0) {
+
+    		try {
+    			out = response.getWriter();
+                out.println("<script>");
+                out.println("alert('금일 해당 영화의 상영이 종료되었습니다.날짜를 다시 선택해 주세요');");
+                out.println("history.back();");
+                out.println("</script>");
+                out.close();
+                return null;
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }
+
 		
 		
 		model.addAttribute("bk_wDate", bk_wDate);		
@@ -207,11 +234,12 @@ public class BookController {
 	// 예약6) 결제화면 뷰
 	@RequestMapping(value="payment", method=RequestMethod.POST)
 	public String payment(@RequestParam("tt_seatNum") String[] str, @RequestParam("mv_title") String mv_title, 
-			HttpServletRequest request, Model model, @ModelAttribute BookVO book, @ModelAttribute MovieVO movieVO) {
+			HttpServletRequest request, Model model, @ModelAttribute BookVO book, @ModelAttribute MovieVO movieVO, HttpSession session) {
 /*			@RequestParam("mv_num") String mv_num , @RequestParam("tt_num") String tt_num, 
 			@RequestParam("bk_wDate") String bk_wDate, @RequestParam("mv_time") String mv_time) {
 */
-
+		
+		//String mb_ID = (String)session.getAttribute("mb_ID");
 		List<BookVO>list = new ArrayList<>();		
 		for (int i=0; i<str.length; i++) {
 			String tt_seatNum = str[i];
@@ -222,7 +250,7 @@ public class BookController {
 			bookVO.setBk_wDate(book.getBk_wDate());
 			bookVO.setMv_time(book.getMv_time());
 			bookVO.setTt_seatNum(tt_seatNum);
-			bookVO.setMb_ID("아이디");
+			//bookVO.setMb_ID(mb_ID);
 			bookVO.setBk_price(10000);
 			//mv_num=null, tt_num=1, tt_seatNum=null, bk_date=null, bk_wDate=2018-12-03, mv_time=16:00, bk_price=30000, bk_paid=null
 			list.add(bookVO);			
@@ -242,11 +270,12 @@ public class BookController {
 	// 예약7) 결제하기
 	@RequestMapping(value = "complete", method = RequestMethod.POST)
 	public String complete(@RequestParam("tt_seatNum") String[] tt_seatNum, HttpServletRequest request,
-			@ModelAttribute BookVO bookVO, Model model, HttpServletResponse response) {
+			@ModelAttribute BookVO bookVO, Model model, HttpServletResponse response,  HttpSession session) {
 		
+		String mb_ID = (String)session.getAttribute("mb_ID");
 		for(int i=0; i<tt_seatNum.length; i++) {
 			// 세션값 확인하여 아이디 값 세팅해야함
-			bookVO.setMb_ID("아이디");
+			bookVO.setMb_ID(mb_ID);
 			bookVO.setTt_seatNum(tt_seatNum[i]);;
 			bookVO.setBk_price(10000);
 			System.out.println(bookVO.toString());
@@ -273,7 +302,30 @@ public class BookController {
 		
 
 	}
-
+	
+	
+	@RequestMapping(value="getAbleDate", method=RequestMethod.GET)
+	public @ResponseBody String getDates(@RequestParam String title) {
+		List<MovieVO> list = bookDao.getMovies(title);
+		Gson gson = new Gson();
+		return gson.toJson(list);
+	}
+	
+	@RequestMapping(value="getAbleTime", method=RequestMethod.GET)
+	public @ResponseBody String getTimes(@RequestParam String title, @RequestParam String date){
+		System.out.println(date);
+		List<MovieVO> list = bookDao.getAbleDate(title, date);		
+		Gson gson = new Gson();
+		return gson.toJson(list);
+		//return null;
+	}
+	
+	@RequestMapping(value="getAbleTheather", method=RequestMethod.GET)
+	public @ResponseBody String getTimes(@RequestParam String title, @RequestParam String date, @RequestParam String time){
+		List<MovieVO> list = bookDao.getAbleTheather(title, date, time);
+		Gson gson = new Gson();
+		return gson.toJson(list);
+	}
 	
 	
 }
